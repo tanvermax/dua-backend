@@ -1,0 +1,50 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const sqlite3_1 = __importDefault(require("sqlite3"));
+const sqlite_1 = require("sqlite");
+const path_1 = __importDefault(require("path"));
+const router = (0, express_1.Router)();
+async function openDb() {
+    return (0, sqlite_1.open)({
+        filename: path_1.default.join(__dirname, '../../db/dua_main.sqlite'),
+        driver: sqlite3_1.default.Database,
+    });
+}
+router.get("/categories", async (req, res) => {
+    try {
+        const db = await openDb();
+        const categories = await db.all("SELECT * FROM category");
+        res.json(categories);
+    }
+    catch (error) {
+        console.error("Error fetching categories:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+router.get("/sub_categories", async (req, res) => {
+    try {
+        const db = await openDb();
+        const categories = await db.all("SELECT * FROM sub_category");
+        res.json(categories);
+    }
+    catch (error) {
+        console.error("Error fetching categories:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+router.get("/dua", async (req, res) => {
+    try {
+        const db = await openDb();
+        const categories = await db.all("SELECT * FROM dua");
+        res.json(categories);
+    }
+    catch (error) {
+        console.error("Error fetching categories:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+exports.default = router;
