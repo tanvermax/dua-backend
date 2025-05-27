@@ -36,6 +36,9 @@ router.get("/sub_categories", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+
+
 router.get("/dua", async (req, res) => {
     try {
         const db = await openDb();
@@ -46,5 +49,22 @@ router.get("/dua", async (req, res) => {
         console.error("Error fetching categories:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
+});
+
+router.get("/dua/subcat/:subcat_id", async (req, res) => {
+  try {
+    const db = await openDb();
+    const subcat_id = req.params.subcat_id; // Get subcat_id from URL parameter
+    const duas = await db.all("SELECT * FROM dua WHERE subcat_id = ?", [subcat_id]);
+    
+    // if (duas.length === 0) {
+    //   return res.status(404).json({ error: "No duas found for this subcategory" });
+    // }
+    
+    res.json(duas);
+  } catch (error) {
+    console.error("Error fetching duas by subcategory:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 exports.default = router;
